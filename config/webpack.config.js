@@ -300,6 +300,7 @@ module.exports = function(webpackEnv) {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
+        '@': path.resolve(__dirname, '../src'),
         ...(modules.webpackAliases || {}),
       },
       plugins: [
@@ -385,6 +386,10 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  ['import', {
+                    libraryName: 'antd',
+                    style: 'css',
+                  }]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
