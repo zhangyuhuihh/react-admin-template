@@ -1,22 +1,13 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
+import hasPermission from '@/assets/utils/hasPermission'
 
 // 方案1
 class AuthComp extends Component {
   render() {
     const { auth } = this.props
 
-    return this.hasPermission(auth) ? this.props.renderAuth() : null
-  }
-
-  hasPermission(v) {
-    const { authArr } = this.props
-    const env = process.env.NODE_ENV
-    if (env === 'development') {
-      return true
-    } else {
-      return authArr.includes(v)
-    }
+    return hasPermission.call(this, auth) ? this.props.renderAuth() : null
   }
 }
 
@@ -27,7 +18,6 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, null)(AuthComp)
-
 
 // 方案2 pass
 // export default connect(mapStateToProps, null)(AuthComp)
@@ -92,6 +82,5 @@ export default connect(mapStateToProps, null)(AuthComp)
 //     authArr: state.authArr
 //   }
 // }
-
 
 // export default connect(mapStateToProps, null)(AuthComp)

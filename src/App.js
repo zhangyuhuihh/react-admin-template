@@ -8,22 +8,21 @@ import { setAuthArr } from './store/action'
 
 class App extends React.Component {
   componentDidMount() {
-    // const { setAuthArr } = this.props
+    const { setAuthArr } = this.props
     // 这里发请求获取权限
-    // chooseSystem({
-    //   privilegeId: 2843
-    // }).then(res => {
-    // const authArr = [
-    //   '首页权限',
-    //   '二级菜单',
-    //   '二级菜单-1',
-    //   '三级菜单',
-    //   '三级菜单-1',
-    //   '三级菜单-2',
-    //   '三级菜单-2-1',
-    //   'express测试'
-    // ]
-    // setAuthArr(authArr)
+    setTimeout(() => {
+      const authArr = [
+        '首页权限',
+        '二级菜单',
+        '二级菜单-1',
+        '三级菜单',
+        '三级菜单-1',
+        '三级菜单-2',
+        '三级菜单-2-1',
+        'express测试'
+      ]
+      setAuthArr(authArr)
+    })
   }
 
   render() {

@@ -3,6 +3,7 @@ import { Menu, Icon } from 'antd'
 import { RouteConfig } from '@/route'
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import hasPermission from '@/assets/utils/hasPermission'
 import _ from 'lodash'
 
 const { SubMenu } = Menu
@@ -87,7 +88,7 @@ class SideMenu extends React.Component {
   iterateMenu(menuList) {
     let target = []
     for (let i in menuList) {
-      if (this.hasPermission(menuList[i].role) && !menuList[i].hidden) {
+      if (hasPermission.call(this, menuList[i].role) && !menuList[i].hidden) {
         if (menuList[i].hasOwnProperty('children')) {
           target[i] = (
             <SubMenu
@@ -119,15 +120,6 @@ class SideMenu extends React.Component {
       }
     }
     return target
-  }
-
-  hasPermission = v => {
-    const env = process.env.NODE_ENV
-    if (env === 'development') {
-      return true
-    } else {
-      return this.props.authArr.includes(v)
-    }
   }
 
   handleChangeMenu = (params, menu) => {

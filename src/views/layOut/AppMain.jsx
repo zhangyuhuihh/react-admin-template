@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
+import hasPermission from '@/assets/utils/hasPermission'
 
 import { connect } from 'react-redux'
 import { RouteConfig } from '@/route'
@@ -39,7 +40,7 @@ class AppMain extends React.Component {
     let redirectArr = []
     const itera = routeList => {
       for (let i = 0; i < routeList.length; i++) {
-        if (this.hasPermission(routeList[i].role)) {
+        if (hasPermission.call(this, routeList[i].role)) {
           if (routeList[i].hasOwnProperty('component')) {
             routeArr.push(
               <Route
@@ -70,15 +71,6 @@ class AppMain extends React.Component {
     return {
       routeArr,
       redirectArr
-    }
-  }
-
-  hasPermission = v => {
-    const env = process.env.NODE_ENV
-    if (env === 'development') {
-      return true
-    } else {
-      return this.props.authArr.includes(v)
     }
   }
 }
