@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import { Dropdown, Icon, Menu, Modal, message } from 'antd'
-import { Link } from 'react-router-dom'
-import { logout } from '@/assets/api/getAuth'
+import { Link, withRouter } from 'react-router-dom'
+// import { logout } from '@/assets/api/getAuth'
 
 class TopRightDrop extends React.Component {
   constructor() {
@@ -65,8 +64,13 @@ class TopRightDrop extends React.Component {
   }
 
   doLogOut = () => {
-    logout().then(() => {
+    // logout().then(() => {
+    //   message.success('成功登出')
+    // })
+    setTimeout(() => {
+      sessionStorage.clear()
       message.success('成功登出')
+      this.props.history.push('/Login')
     })
   }
 
@@ -139,4 +143,4 @@ class TopRightDrop extends React.Component {
   }
 }
 
-export default TopRightDrop
+export default withRouter(TopRightDrop)
