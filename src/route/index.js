@@ -43,6 +43,13 @@ export const RouteConfig = [
     icon: 'menu'
   },
   {
+    name: '表格',
+    path: '/table',
+    component: lazy(() => import('../views/test/tables')),
+    role: '表格',
+    icon: 'table'
+  },
+  {
     name: '二级菜单',
     role: '二级菜单',
     path: '/twoLevelMenu',
