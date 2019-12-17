@@ -14,6 +14,7 @@ class App extends React.Component {
       const authArr = [
         '首页权限',
         '表格',
+        '表单',
         '二级菜单',
         '二级菜单-1',
         '三级菜单',

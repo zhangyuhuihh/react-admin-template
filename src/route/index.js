@@ -40,7 +40,7 @@ export const RouteConfig = [
     path: '/Dashboard',
     component: lazy(() => import('../views/test/Dashboard')),
     role: '首页权限',
-    icon: 'menu'
+    icon: 'home'
   },
   {
     name: '表格',
@@ -48,6 +48,13 @@ export const RouteConfig = [
     component: lazy(() => import('../views/test/tables')),
     role: '表格',
     icon: 'table'
+  },
+  {
+    name: '表单',
+    path: '/forms',
+    component: lazy(() => import('../views/test/forms')),
+    role: '表单',
+    icon: 'form'
   },
   {
     name: '二级菜单',
