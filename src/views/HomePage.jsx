@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import MyLayOut from './layOut/LayOut'
-import noMatch from './test/noMatch'
+import NoMatch from '@/components/NoMatch'
 import { RouteConfig, SingleRoutes } from '@/route'
 import { flattern } from '@/assets/utils/helper'
 import { connect } from 'react-redux'
@@ -43,7 +43,7 @@ class HomePage extends React.Component {
     }
     return (
       <Switch>
-        <Route component={noMatch}></Route>
+        <Route component={NoMatch}></Route>
       </Switch>
     )
   }
