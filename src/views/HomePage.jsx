@@ -4,9 +4,10 @@ import MyLayOut from './layOut/LayOut'
 import noMatch from './test/noMatch'
 import { RouteConfig, SingleRoutes } from '@/route'
 import { flattern } from '@/assets/utils/helper'
+import { connect } from 'react-redux'
 
 const FlatternRouteConfig = flattern(RouteConfig, 'children')
-const SingleRoutePathLists = SingleRoutes.map(v => v.path).concat('/')
+const whiteRoutePaths = SingleRoutes.map(v => v.path).concat('/')
 
 class HomePage extends React.Component {
   renderSingleRoutes() {
@@ -16,10 +17,14 @@ class HomePage extends React.Component {
   }
 
   render() {
+    const { authArr } = this.props
     const { pathname } = this.props.location
-    const targetRouter = FlatternRouteConfig.some(v => v.path === pathname)
-
-    if (targetRouter || SingleRoutePathLists.includes(pathname)) {
+    const menuRoute = FlatternRouteConfig.find(v => v.path === pathname)
+    let targetRouter = null
+    if (menuRoute) {
+      targetRouter = authArr.some(v => v === menuRoute.role)
+    }
+    if (targetRouter || whiteRoutePaths.includes(pathname)) {
       return (
         <Switch>
           {this.renderSingleRoutes()}
@@ -35,14 +40,19 @@ class HomePage extends React.Component {
           ></Route>
         </Switch>
       )
-    } else {
-      return (
-        <Switch>
-          <Route component={noMatch}></Route>
-        </Switch>
-      )
     }
+    return (
+      <Switch>
+        <Route component={noMatch}></Route>
+      </Switch>
+    )
   }
 }
 
-export default withRouter(HomePage)
+const mapStateToProps = state => {
+  return {
+    authArr: state.authArr
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(HomePage))

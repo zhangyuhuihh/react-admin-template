@@ -139,7 +139,6 @@ class TagsView extends React.Component {
 
   render() {
     const { visitiedViews } = this.props
-    console.log('visitiedViews: ', visitiedViews);
     const { pathname: currentActiveTag } = this.props.history.location
     return (
       <div

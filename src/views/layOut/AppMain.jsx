@@ -6,24 +6,8 @@ import { connect } from 'react-redux'
 import { RouteConfig } from '@/route'
 
 class AppMain extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      redirectArr: [],
-      routeArr: []
-    }
-  }
-
-  componentDidMount() {
-    const { redirectArr, routeArr } = this.produceRoute(RouteConfig)
-    this.setState({
-      redirectArr: redirectArr,
-      routeArr: routeArr
-    })
-  }
-
   render() {
-    const { redirectArr, routeArr } = this.state
+    const { redirectArr, routeArr } = this.produceRoute(RouteConfig)
     return (
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>

@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux'
+import { RouteConfig } from '@/route'
+import { flattern } from '@/assets/utils/helper'
 
 const routeWhiteList = ['首页']
+const defaultMenus = flattern(RouteConfig, 'children').map(v => v.role)
 
-const authReducer = (state = [], action) => {
+const authReducer = (state = [...defaultMenus], action) => {
   switch (action.type) {
     case 'SET_AUTHARR':
       return routeWhiteList.concat(action.authArr)
@@ -17,7 +20,7 @@ const visitedViewsReducer = (
       routeName: '首页',
       path: '/Dashboard'
     }
-  ] /** 这里的值就是对应的下面的想要的key的初始值,具体参考官网*/,
+  ],
   action
 ) => {
   switch (action.type) {
@@ -29,7 +32,6 @@ const visitedViewsReducer = (
         isHave.state = action.visitedObj.state
         return state
       }
-    // return state.concat(action.visitedObj)
     case 'REMOVE_VISITIEDVIEWS':
       return state.filter(v => v.path !== action.visitedObj.path)
     default:
