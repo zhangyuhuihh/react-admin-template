@@ -7,17 +7,12 @@ import TagsView from '@/components/TagsView'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addVisitiedViews } from '@/store/action'
-// import _ from 'lodash'
 import TopRightDrop from './TopRightDrop'
 import SideMenu from './SideMenu'
 
-import { HasPermissionContext } from '@/assets/contexts/HasPermissionContext'
-
 const { Header, Sider, Content } = Layout
 
-// @connect(mapStateToProps, mapDispatchToProps) es6:Decorator
 class MyLayOut extends React.Component {
-  static contextType = HasPermissionContext
   constructor(props) {
     super(props)
     this.state = {
@@ -29,7 +24,6 @@ class MyLayOut extends React.Component {
   componentDidMount() {
     const { addVisitiedViews } = this.props
     const { pathname, state } = this.props.history.location
-    console.log('pathname: ', pathname)
     const tagName = this.findCurrentTagName(pathname)
     addVisitiedViews({
       routeName: tagName,

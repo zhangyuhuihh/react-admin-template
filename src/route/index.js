@@ -1,6 +1,29 @@
 import { lazy } from 'react'
 
+import Login from '../views/login/Login.jsx'
+import SinglePage from '../views/test/SinglePage'
+
+/*
+独立页面路由,
+name: 名称
+path: 路径
+component: 组件
+*/
+export const SingleRoutes = [
+  {
+    name: '登录',
+    path: '/Login',
+    component: Login
+  },
+  {
+    name: '独立页面',
+    path: '/SinglePage',
+    component: SinglePage
+  }
+]
+
 /**
+ * 菜单路由
  * name: 路由对应的名称
  * role: 路由对应的权限名称
  * component: 路由对应的组件
@@ -10,7 +33,6 @@ import { lazy } from 'react'
  * children: 大菜单，子路由
  * hidden: 是否隐藏(true隐藏，默认打开)
  */
-
 
 export const RouteConfig = [
   {
@@ -60,7 +82,9 @@ export const RouteConfig = [
           {
             name: '三级菜单-2-1',
             path: '/threeLevelMenu/threeLevelMenu-sub/PageTwo',
-            component: lazy(() => import('../views/test/threeLevelMenu/PageTwo')),
+            component: lazy(() =>
+              import('../views/test/threeLevelMenu/PageTwo')
+            ),
             role: '三级菜单-2-1',
             icon: ''
           }

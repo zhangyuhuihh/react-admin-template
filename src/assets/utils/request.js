@@ -31,7 +31,7 @@ const request = (config = {}) => {
       case '44444':
         message.error(body.msg)
         setTimeout(() => {
-          window.location.href = '/my_screen/login'
+          window.location.href = '/react-admin-template/login'
         }, 3000)
         break
       case '99999':

@@ -1,42 +1,28 @@
 import React from 'react'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
-import SinglePage from '@/views/test/SinglePage'
-import Login from '@/views/login/Login.jsx'
 import MyLayOut from './layOut/LayOut'
 import noMatch from './test/noMatch'
-import { RouteConfig } from '@/route'
-import _ from 'lodash'
+import { RouteConfig, SingleRoutes } from '@/route'
+import { flattern } from '@/assets/utils/helper'
 
-function flattern(RouteConfig) {
-  let arr = []
-  const itera = list => {
-    for (let i = 0; i < list.length; i++) {
-      const element = list[i]
-      if (element.hasOwnProperty('children')) {
-        itera(element.children)
-      }
-      arr.push(_.omit(element, ['children']))
-    }
-  }
-  itera(RouteConfig)
-  return arr
-}
-
-const FlatternRouteConfig = flattern(RouteConfig)
-const singleRouteList = ['/', '/Login', '/SinglePage']
+const FlatternRouteConfig = flattern(RouteConfig, 'children')
+const SingleRoutePathLists = SingleRoutes.map(v => v.path).concat('/')
 
 class HomePage extends React.Component {
+  renderSingleRoutes() {
+    return SingleRoutes.map(v => {
+      return <Route key={v.path} exact path={v.path} component={v.component} />
+    })
+  }
+
   render() {
-    const { location } = this.props
-    const { pathname } = location
+    const { pathname } = this.props.location
     const targetRouter = FlatternRouteConfig.some(v => v.path === pathname)
 
-    if (targetRouter || singleRouteList.includes(pathname)) {
+    if (targetRouter || SingleRoutePathLists.includes(pathname)) {
       return (
         <Switch>
-          <Route exact path="/Login" component={Login} />
-          <Route exact path="/SinglePage" component={SinglePage} />
-          {/* 这里相当于做了一个全局的路由守卫（'/'不用exact），神之一手 */}
+          {this.renderSingleRoutes()}
           <Route
             path="/"
             render={() => {
@@ -57,6 +43,6 @@ class HomePage extends React.Component {
       )
     }
   }
-} 
+}
 
 export default withRouter(HomePage)
