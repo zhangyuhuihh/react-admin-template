@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import './assets/styles/andtEdit/gloable_edit.scss';
+import './assets/styles/andtEdit/gloable_edit.scss'
 import App from './App'
-import { LocaleProvider } from 'antd'
+import { ConfigProvider } from 'antd'
 import zh_CN from 'antd/lib/locale-provider/zh_CN'
 
 import { Provider } from 'react-redux'
@@ -14,11 +14,11 @@ import * as serviceWorker from './serviceWorker'
 import './icons'
 
 ReactDOM.render(
-  <LocaleProvider locale={zh_CN}>
+  <ConfigProvider locale={zh_CN}>
     <Provider store={store}>
       <App />
     </Provider>
-  </LocaleProvider>,
+  </ConfigProvider>,
   document.getElementById('root')
 )
 

@@ -2,10 +2,8 @@ import React from 'react'
 import { Menu, Icon } from 'antd'
 import { RouteConfig } from '@/route'
 import { Link, withRouter } from 'react-router-dom'
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 import _ from 'lodash'
-
-import { HasPermissionContext } from '@/assets/contexts/HasPermissionContext'
 
 const { SubMenu } = Menu
 
@@ -50,7 +48,6 @@ function produceNewMenuList(RouteConfig) {
 const menuList = produceNewMenuList(RouteConfig)
 
 class SideMenu extends React.Component {
-  static contextType = HasPermissionContext
   constructor(props) {
     super(props)
     const { pathname } = this.props.history.location
@@ -86,46 +83,11 @@ class SideMenu extends React.Component {
     return null
   }
 
-  render() {
-    const { menuList, ownDefaultOpenKeys, ownDefaultSelectedKeys } = this.state
-    const { collapsed } = this.props
-    return (
-      <React.Fragment>
-        <div className="logo" />
-        <div
-          style={{
-            width: '217px',
-            overflowY: 'scroll',
-            height: 'calc(100vh - 64px)',
-            marginRight: '-17px'
-          }}
-        >
-          <Menu
-            key={ownDefaultSelectedKeys}
-            // 暂时没找到更优雅地方式，有点挫啊大哥
-            // 用唯一的key，用于在改变这些所谓的'default'值后页面可以重新渲染
-            defaultSelectedKeys={ownDefaultSelectedKeys}
-            defaultOpenKeys={ownDefaultOpenKeys}
-            mode="inline"
-            theme="dark"
-            inlineCollapsed={collapsed}
-          >
-            {this.iterateMenu(menuList)}
-          </Menu>
-        </div>
-      </React.Fragment>
-    )
-  }
-
-  renderMenu() {
-    return this.iterateMenu(this.state.menuList)
-  }
-
   // 适用上述格式多层级菜单
   iterateMenu(menuList) {
     let target = []
     for (let i in menuList) {
-      if (this.context(menuList[i].role) && !menuList[i].hidden) {
+      if (this.hasPermission(menuList[i].role) && !menuList[i].hidden) {
         if (menuList[i].hasOwnProperty('children')) {
           target[i] = (
             <SubMenu
@@ -159,6 +121,15 @@ class SideMenu extends React.Component {
     return target
   }
 
+  hasPermission = v => {
+    const env = process.env.NODE_ENV
+    if (env === 'development') {
+      return true
+    } else {
+      return this.props.authArr.includes(v)
+    }
+  }
+
   handleChangeMenu = (params, menu) => {
     this.props.history.push(menu.path)
   }
@@ -176,7 +147,45 @@ class SideMenu extends React.Component {
       cacheOpenKeys: newdefaultOpenKeys
     })
   }
-  // https://www.jianshu.com/p/77e48c129c16
+
+  renderMenu() {
+    return this.iterateMenu(this.state.menuList)
+  }
+
+  render() {
+    const { menuList, ownDefaultOpenKeys, ownDefaultSelectedKeys } = this.state
+    const { collapsed } = this.props
+    return (
+      <React.Fragment>
+        <div className="logo" />
+        <div
+          style={{
+            width: '217px',
+            overflowY: 'scroll',
+            height: 'calc(100vh - 64px)',
+            marginRight: '-17px'
+          }}
+        >
+          <Menu
+            key={ownDefaultSelectedKeys}
+            defaultSelectedKeys={ownDefaultSelectedKeys}
+            defaultOpenKeys={ownDefaultOpenKeys}
+            mode="inline"
+            theme="dark"
+            collapsed={collapsed}
+          >
+            {this.iterateMenu(menuList)}
+          </Menu>
+        </div>
+      </React.Fragment>
+    )
+  }
 }
 
-export default withRouter(SideMenu)
+const mapStateToProps = state => {
+  return {
+    authArr: state.authArr
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(SideMenu))

@@ -3,10 +3,8 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { RouteConfig } from '@/route'
-import { HasPermissionContext } from '@/assets/contexts/HasPermissionContext'
 
 class AppMain extends React.Component {
-  static contextType = HasPermissionContext
   constructor(props) {
     super(props)
     this.state = {
@@ -15,7 +13,7 @@ class AppMain extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { redirectArr, routeArr } = this.produceRoute(RouteConfig)
     this.setState({
       redirectArr: redirectArr,
@@ -41,7 +39,7 @@ class AppMain extends React.Component {
     let redirectArr = []
     const itera = routeList => {
       for (let i = 0; i < routeList.length; i++) {
-        if (this.context(routeList[i].role)) {
+        if (this.hasPermission(routeList[i].role)) {
           if (routeList[i].hasOwnProperty('component')) {
             routeArr.push(
               <Route
@@ -74,10 +72,18 @@ class AppMain extends React.Component {
       redirectArr
     }
   }
+
+  hasPermission = v => {
+    const env = process.env.NODE_ENV
+    if (env === 'development') {
+      return true
+    } else {
+      return this.props.authArr.includes(v)
+    }
+  }
 }
 
 const mapStateToProps = state => {
-  // 1.尽量不要添加ownProps
   return {
     authArr: state.authArr
   }
