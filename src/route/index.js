@@ -95,7 +95,7 @@ export const RouteConfig = [
   {
     name: 'expressDemo',
     path: '/expressDemo',
-    component: lazy(() => import('../views/expressDemo')),
+    component: lazy(() => import('../views/test/expressDemo')),
     role: 'express测试',
     icon: 'menu'
   }

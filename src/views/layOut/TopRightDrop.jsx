@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dropdown, Icon, Menu, Modal, message, Avatar } from 'antd'
+import { Dropdown, Menu, Modal, message, Avatar } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 
 class TopRightDrop extends React.Component {
