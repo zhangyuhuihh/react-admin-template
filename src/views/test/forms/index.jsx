@@ -66,27 +66,6 @@ class DynamicFieldSet extends React.Component {
 
   remove1 = index1 => {
     this.updateFirstMuiltFormItems(index1)
-    this.updateFirstFormDatas(index1)
-  }
-
-  updateFirstFormDatas(index1) {
-    const { form } = this.props
-    const currentFormData = form.getFieldsValue()
-    let newFormData =  currentFormData.locationAndCount.filter((v, i) => i !== index1)
-    let obj = {}
-    for (let i = 0; i < newFormData.length; i++) {
-      const element = newFormData[i]
-      obj[`locationAndCount.${i}.name`] = element.name
-      if (element.coreList) {
-        for (let k = 0; k < element.coreList.length; k++) {
-          const element2 = element.coreList[k]
-          obj[`locationAndCount.${i}.coreList.${k}.name`] = element2.name
-        }
-      }
-    }
-    form.setFieldsValue({
-      ...obj
-    })
   }
 
   updateFirstMuiltFormItems(index1) {
@@ -99,26 +78,6 @@ class DynamicFieldSet extends React.Component {
 
   remove2 = (index1, index2) => {
     this.updateSecondMuiltFormItems(index1, index2)
-    this.updateSecondFormDatas(index1, index2)
-  }
-
-  updateSecondFormDatas(index1, index2) {
-    const { form } = this.props
-    const currentFormData = form.getFieldsValue()
-    let newFormData = _.cloneDeep(currentFormData)
-    newFormData.locationAndCount[index1].coreList.splice(index2, 1)
-    let obj = {}
-    for (
-      let i = 0;
-      i < newFormData.locationAndCount[index1].coreList.length;
-      i++
-    ) {
-      obj[`locationAndCount.${index1}.coreList.${i}.name`] =
-        newFormData.locationAndCount[index1].coreList[i].name
-    }
-    form.setFieldsValue({
-      ...obj
-    })
   }
 
   updateSecondMuiltFormItems(index1, index2) {
@@ -187,7 +146,7 @@ class DynamicFieldSet extends React.Component {
       return (
         <React.Fragment key={item1.location}>
           <Form.Item {...firstformItemLayout} label={'第一级'} required={false}>
-            {getFieldDecorator(`locationAndCount.${index1}.name`, {
+            {getFieldDecorator(`locationAndCount.first${item1.location}.name`, {
               validateTrigger: ['onChange', 'onBlur'],
               initialValue: item1.name,
               rules: [
@@ -243,7 +202,7 @@ class DynamicFieldSet extends React.Component {
               >
                 {/* 这里的id，如果${}里面的是数字，那么产生的是数组，如果是字符串，那么产生的是对象属性 */}
                 {getFieldDecorator(
-                  `locationAndCount.${index1}.coreList.${index2}.name`,
+                  `locationAndCount.first${item1.location}.coreList.second${items2.location}.name`,
                   {
                     validateTrigger: ['onChange', 'onBlur'],
                     initialValue: items2.name,
