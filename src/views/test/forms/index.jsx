@@ -2,49 +2,61 @@ import React from 'react'
 
 import { Form, Input, Icon, Button } from 'antd'
 import _ from 'lodash'
-const formItemLayout = {
+const firstformItemLayout = {
   labelCol: {
-    xs: { span: 4 },
+    xs: { span: 4 }
     // sm: { span: 8 }
   },
   wrapperCol: {
-    xs: { span: 20 },
+    xs: { span: 20 }
     // sm: { span: 16 }
+  }
+}
+
+const secondformItemLayOut = {
+  labelCol: {
+    xs: { span: 4 }
+  },
+  wrapperCol: {
+    xs: { span: 20 }
   }
 }
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
-    xs: { span: 10, offset: 4 },
+    xs: { span: 20, offset: 4 }
     // sm: { span: 10, offset: 4 }
   }
 }
 
 // tree的数据结构
 const treeData = [
-  {
-    location: '1',
-    name: '第一层',
-    coreList: [{ location: '4', name: '第一层子一' }]
-  },
+  // {
+  //   location: '1',
+  //   name: '第一层',
+  //   coreList: [{ location: '4', name: '第一层子一' }]
+  // },
   {
     location: '2',
     name: '第一层',
     coreList: [
       {
         location: '6',
-        name: '第一层子一',
-        coreList: [{ location: '8', name: '第一层子子一' }]
+        name: '第一层子一'
       }
     ]
-  },
-  {
-    location: '3',
-    name: '第一层',
-    coreList: [{ location: '7', name: '第一层子一' }]
   }
+  // {
+  //   location: '3',
+  //   name: '第一层',
+  //   coreList: [
+  //     { location: '7', name: '第一层子一' },
+  //     { location: '8', name: '第一层子er' },
+  //     { location: '9', name: '第一层子san' }
+  //   ]
+  // }
 ]
 
-// let id = 0
+let id = 0
 
 // function getObjectByPath(obj, path) {
 //   let tempObj = obj
@@ -69,7 +81,7 @@ class DynamicFieldSet extends React.Component {
       renderCommonFormItems: []
     }
   }
-  remove = index => {
+  remove1 = index => {
     const { muiltFormItems } = this.state
     const newMuiltFormItems = muiltFormItems.filter((v, i) => i !== index)
     this.setState({
@@ -77,16 +89,47 @@ class DynamicFieldSet extends React.Component {
     })
   }
 
-  add = index1 => {
+  remove2 = (index1, index2) => {
+    const { form } = this.props
+    const currentFormData = form.getFieldsValue()
+    console.log('删除之前currentFormData: ', currentFormData)
+    let newFormData = _.cloneDeep(currentFormData)
+
+    newFormData.locationAndCount[index1].coreList.splice(index2, 1)
+    console.log('newFormData: ', newFormData)
+
+    const { muiltFormItems } = this.state
+    let o = _.cloneDeep(muiltFormItems)
+    o[index1].coreList.splice(index2, 1)
+    console.log('o: ', o)
+    this.setState({
+      muiltFormItems: o
+    })
+
+    let obj = {}
+    for (
+      let i = 0;
+      i < newFormData.locationAndCount[index1].coreList.length;
+      i++
+    ) {
+      obj[`locationAndCount.${index1}.coreList.${i}.name`] =
+        newFormData.locationAndCount[index1].coreList[i].name
+    }
+    form.setFieldsValue({
+      ...obj
+    })
+  }
+
+  add = () => {
     // 增加第一级
     const { muiltFormItems } = this.state
     // todo 这里要修改一个初始值,初始化的对象结构要完整
     let item = {
-      location: '',
+      location: new Date().getTime(),
       name: '',
       coreList: [
         {
-          location: '',
+          location: new Date().getTime(),
           name: ''
         }
       ]
@@ -101,7 +144,7 @@ class DynamicFieldSet extends React.Component {
     const { muiltFormItems } = this.state
     let o = _.cloneDeep(muiltFormItems)
     o[index1].coreList.push({
-      location: '',
+      location: new Date().getTime(),
       name: ''
     })
     this.setState({
@@ -126,14 +169,15 @@ class DynamicFieldSet extends React.Component {
   renderMuiltFormItemsFirst() {
     const { getFieldDecorator } = this.props.form
     const { muiltFormItems } = this.state
+    // getFieldDecorator('all.locationAndCount', { initialValue: [] });
 
     return muiltFormItems.map((item1, index1) => {
       return (
-        <React.Fragment key={index1}>
-          <Form.Item {...formItemLayout} label={'第一级'} required={false}>
-            {getFieldDecorator(`locationAndCount.${index1}.location`, {
+        <React.Fragment key={item1.location}>
+          <Form.Item {...firstformItemLayout} label={'第一级'} required={false}>
+            {getFieldDecorator(`locationAndCount.${index1}.name`, {
               validateTrigger: ['onChange', 'onBlur'],
-              initialValue: item1.location,
+              initialValue: item1.name,
               rules: [
                 {
                   required: true,
@@ -144,14 +188,14 @@ class DynamicFieldSet extends React.Component {
             })(
               <Input
                 placeholder="第一层输入框"
-                style={{ width: '60%', marginRight: 8 }}
+                style={{ width: '220px', marginRight: 8 }}
               />
             )}
             {muiltFormItems.length > 1 ? (
               <Icon
                 className="dynamic-delete-button"
                 type="minus-circle-o"
-                onClick={() => this.remove(index1)}
+                onClick={() => this.remove1(index1)}
               />
             ) : null}
           </Form.Item>
@@ -170,8 +214,8 @@ class DynamicFieldSet extends React.Component {
   renderMuiltFormItemsSecond(item1, index1) {
     const { getFieldDecorator } = this.props.form
     return (
-      <React.Fragment>
-        <div style={{ position: 'absolute', right: '0px' }}>
+      <div style={{ position: 'relative' }}>
+        <div style={{ position: 'absolute', right: '60px', top: '5px' }}>
           <Button type="dashed" onClick={() => this.add2(index1)}>
             <Icon type="plus" />
             添加
@@ -179,14 +223,18 @@ class DynamicFieldSet extends React.Component {
         </div>
         {item1.coreList.map((items2, index2) => {
           return (
-            <div key={index2} style={{width: '350px'}}>
-              <Form.Item {...formItemLayout} label={'第二级'} required={false}>
+            <div key={items2.location} style={{ width: '300px' }}>
+              <Form.Item
+                {...secondformItemLayOut}
+                label={'第二级'}
+                required={false}
+              >
                 {/* 这里的id，如果${}里面的是数字，那么产生的是数组，如果是字符串，那么产生的是对象属性 */}
                 {getFieldDecorator(
-                  `locationAndCount.${index1}.coreList.${index2}.location`,
+                  `locationAndCount.${index1}.coreList.${index2}.name`,
                   {
                     validateTrigger: ['onChange', 'onBlur'],
-                    initialValue: items2.location,
+                    initialValue: items2.name,
                     rules: [
                       {
                         required: true,
@@ -198,18 +246,18 @@ class DynamicFieldSet extends React.Component {
                 )(
                   <Input
                     placeholder="第二层输入框"
-                    style={{ width: '60%', marginRight: 8 }}
+                    style={{ width: '203px', marginRight: 8 }}
                   />
                 )}
                 <Icon
                   type="minus-circle-o"
-                  onClick={() => this.remove(index1, index2)}
+                  onClick={() => this.remove2(index1, index2)}
                 />
               </Form.Item>
             </div>
           )
         })}
-      </React.Fragment>
+      </div>
     )
   }
 
@@ -224,9 +272,9 @@ class DynamicFieldSet extends React.Component {
           {this.renderMuiltFormItemsFirst()}
           {/* {this.renderCommonFormItems()} */}
           <Form.Item {...formItemLayoutWithOutLabel}>
-            <Button type="dashed" onClick={this.add}>
+            <Button type="dashed" onClick={this.add} style={{ width: '220px' }}>
               <Icon type="plus" />
-              增加第一级
+              添加第一级
             </Button>
           </Form.Item>
           <Form.Item {...formItemLayoutWithOutLabel}>
