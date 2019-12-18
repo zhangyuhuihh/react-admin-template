@@ -44,7 +44,7 @@ const treeData = [
         name: '第一层子一'
       }
     ]
-  }
+  },
   // {
   //   location: '3',
   //   name: '第一层',
@@ -56,56 +56,57 @@ const treeData = [
   // }
 ]
 
-let id = 0
-
-// function getObjectByPath(obj, path) {
-//   let tempObj = obj
-//   let keyArr = path.split('.')
-//   for (let i = 0; i < keyArr.length; i++) {
-//     let key = keyArr[i]
-//     if (key in obj) {
-//       // in操作符会从对象原型上寻找
-//       tempObj = tempObj[key]
-//     } else {
-//       throw new Error('请输入一个正确的对象路径')
-//     }
-//   }
-//   return { ...tempObj }
-// }
-
 class DynamicFieldSet extends React.Component {
   constructor() {
     super()
     this.state = {
-      muiltFormItems: treeData,
-      renderCommonFormItems: []
+      muiltFormItems: treeData
     }
   }
-  remove1 = index => {
+
+  remove1 = index1 => {
+    this.updateFirstMuiltFormItems(index1)
+    this.updateFirstFormDatas(index1)
+  }
+
+  updateFirstFormDatas(index1) {
+    const { form } = this.props
+    const currentFormData = form.getFieldsValue()
+    let newFormData =  currentFormData.locationAndCount.filter((v, i) => i !== index1)
+    let obj = {}
+    for (let i = 0; i < newFormData.length; i++) {
+      const element = newFormData[i]
+      obj[`locationAndCount.${i}.name`] = element.name
+      if (element.coreList) {
+        for (let k = 0; k < element.coreList.length; k++) {
+          const element2 = element.coreList[k]
+          obj[`locationAndCount.${i}.coreList.${k}.name`] = element2.name
+        }
+      }
+    }
+    form.setFieldsValue({
+      ...obj
+    })
+  }
+
+  updateFirstMuiltFormItems(index1) {
     const { muiltFormItems } = this.state
-    const newMuiltFormItems = muiltFormItems.filter((v, i) => i !== index)
+    const newMuiltFormItems = muiltFormItems.filter((v, i) => i !== index1)
     this.setState({
       muiltFormItems: newMuiltFormItems
     })
   }
 
   remove2 = (index1, index2) => {
+    this.updateSecondMuiltFormItems(index1, index2)
+    this.updateSecondFormDatas(index1, index2)
+  }
+
+  updateSecondFormDatas(index1, index2) {
     const { form } = this.props
     const currentFormData = form.getFieldsValue()
-    console.log('删除之前currentFormData: ', currentFormData)
     let newFormData = _.cloneDeep(currentFormData)
-
     newFormData.locationAndCount[index1].coreList.splice(index2, 1)
-    console.log('newFormData: ', newFormData)
-
-    const { muiltFormItems } = this.state
-    let o = _.cloneDeep(muiltFormItems)
-    o[index1].coreList.splice(index2, 1)
-    console.log('o: ', o)
-    this.setState({
-      muiltFormItems: o
-    })
-
     let obj = {}
     for (
       let i = 0;
@@ -120,16 +121,28 @@ class DynamicFieldSet extends React.Component {
     })
   }
 
+  updateSecondMuiltFormItems(index1, index2) {
+    const { muiltFormItems } = this.state
+    let o = _.cloneDeep(muiltFormItems)
+    o[index1].coreList.splice(index2, 1)
+    this.setState({
+      muiltFormItems: o
+    })
+  }
+
+  getFakeUUid() {
+    return new Date().getTime()
+  }
+
   add = () => {
     // 增加第一级
     const { muiltFormItems } = this.state
-    // todo 这里要修改一个初始值,初始化的对象结构要完整
     let item = {
-      location: new Date().getTime(),
+      location: this.getFakeUUid(),
       name: '',
       coreList: [
         {
-          location: new Date().getTime(),
+          location: this.getFakeUUid(),
           name: ''
         }
       ]
@@ -144,7 +157,7 @@ class DynamicFieldSet extends React.Component {
     const { muiltFormItems } = this.state
     let o = _.cloneDeep(muiltFormItems)
     o[index1].coreList.push({
-      location: new Date().getTime(),
+      location: this.getFakeUUid(),
       name: ''
     })
     this.setState({
@@ -169,7 +182,6 @@ class DynamicFieldSet extends React.Component {
   renderMuiltFormItemsFirst() {
     const { getFieldDecorator } = this.props.form
     const { muiltFormItems } = this.state
-    // getFieldDecorator('all.locationAndCount', { initialValue: [] });
 
     return muiltFormItems.map((item1, index1) => {
       return (
@@ -261,9 +273,9 @@ class DynamicFieldSet extends React.Component {
     )
   }
 
-  renderCommonFormItems() {
-    return <div>这里是正常的表单</div>
-  }
+  // renderCommonFormItems() {
+  //   return <div>这里是正常的表单</div>
+  // }
 
   render() {
     return (
