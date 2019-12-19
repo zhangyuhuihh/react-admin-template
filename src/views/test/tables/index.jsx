@@ -27,7 +27,7 @@ for (let i = 0; i < 100; i++) {
   })
 }
 
-export default class SinglePage extends React.Component {
+export default class Tables extends React.Component {
   render() {
     return (
       <Table
