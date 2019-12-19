@@ -15,6 +15,7 @@ class App extends React.Component {
         '首页权限',
         '表格',
         '表单',
+        '级联树',
         '二级菜单',
         '二级菜单-1',
         '三级菜单',

@@ -57,6 +57,13 @@ export const RouteConfig = [
     icon: 'form'
   },
   {
+    name: '级联树',
+    path: '/cascTree',
+    component: lazy(() => import('../views/test/cascTree')),
+    role: '级联树',
+    icon: 'form'
+  },
+  {
     name: '二级菜单',
     role: '二级菜单',
     path: '/twoLevelMenu',
