@@ -1,45 +1,89 @@
 import React from 'react'
-import { Table } from 'antd'
+import { Table, Divider, Tag } from 'antd'
+
 const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    width: 150
+    key: 'name',
+    render: text => <a>{text}</a>
   },
   {
     title: 'Age',
     dataIndex: 'age',
-    width: 150
+    key: 'age'
   },
   {
     title: 'Address',
-    dataIndex: 'address'
+    dataIndex: 'address',
+    key: 'address'
+  },
+  {
+    title: 'Tags',
+    key: 'tags',
+    dataIndex: 'tags',
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green'
+          if (tag === 'loser') {
+            color = 'volcano'
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          )
+        })}
+      </span>
+    )
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: (text, record) => (
+      <span>
+        <span>Invite {record.name}</span>
+        <Divider type='vertical' />
+        <span>Delete</span>
+      </span>
+    )
   }
 ]
 
-const data = []
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i,
-    name: `苦逼小前端 ${i}枚`,
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
     age: 32,
-    address: `埃塞俄比亚难民${i}`
-  })
-}
-
+    address: 'New York No. 1 Lake Park',
+    tags: ['nice', 'developer']
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+    tags: ['loser']
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+    tags: ['cool', 'teacher']
+  }
+]
 export default class Tables extends React.Component {
   render() {
     return (
-      <div style={{
-        height: '100%',
-        overflowY: 'scroll'
-      }}>
-        <Table
-          columns={columns}
-          dataSource={data}
-          pagination={{ pageSize: 50 }}
-          // scroll={{ y: 600 }}
-        />
+      <div
+        style={{
+          height: '100%',
+          overflow: 'hidde'
+        }}
+      >
+        <Table columns={columns} dataSource={data} />
       </div>
     )
   }
