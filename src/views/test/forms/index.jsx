@@ -30,11 +30,11 @@ const formItemLayoutWithOutLabel = {
 
 // tree的数据结构
 const treeData = [
-  // {
-  //   location: '1',
-  //   name: '第一层',
-  //   coreList: [{ location: '4', name: '第一层子一' }]
-  // },
+  {
+    location: '1',
+    name: '第一层',
+    coreList: [{ location: '4', name: '第一层子一' }]
+  },
   {
     location: '2',
     name: '第一层',
@@ -44,16 +44,7 @@ const treeData = [
         name: '第一层子一'
       }
     ]
-  },
-  // {
-  //   location: '3',
-  //   name: '第一层',
-  //   coreList: [
-  //     { location: '7', name: '第一层子一' },
-  //     { location: '8', name: '第一层子er' },
-  //     { location: '9', name: '第一层子san' }
-  //   ]
-  // }
+  }
 ]
 
 class DynamicFieldSet extends React.Component {

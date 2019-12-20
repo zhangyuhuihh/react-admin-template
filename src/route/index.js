@@ -61,7 +61,7 @@ export const RouteConfig = [
     path: '/cascTree',
     component: lazy(() => import('../views/test/cascTree')),
     role: '级联树',
-    icon: 'form'
+    icon: 'apartment'
   },
   {
     name: '二级菜单',

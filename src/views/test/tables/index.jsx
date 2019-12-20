@@ -30,12 +30,17 @@ for (let i = 0; i < 100; i++) {
 export default class Tables extends React.Component {
   render() {
     return (
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 50 }}
-        scroll={{ y: 600 }}
-      />
+      <div style={{
+        height: '100%',
+        overflowY: 'scroll'
+      }}>
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={{ pageSize: 50 }}
+          // scroll={{ y: 600 }}
+        />
+      </div>
     )
   }
 }
