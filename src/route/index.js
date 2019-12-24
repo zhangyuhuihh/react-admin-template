@@ -64,6 +64,13 @@ export const RouteConfig = [
     icon: 'apartment'
   },
   {
+    name: '树选择',
+    path: '/treeSelect',
+    component: lazy(() => import('../views/test/treeSelect')),
+    role: '树选择',
+    icon: 'form'
+  },
+  {
     name: '二级菜单',
     role: '二级菜单',
     path: '/twoLevelMenu',

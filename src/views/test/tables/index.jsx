@@ -6,7 +6,7 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: text => <a>{text}</a>
+    render: text => <span>{text}</span>
   },
   {
     title: 'Age',
