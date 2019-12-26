@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, Modal, Button, Form, Input } from 'antd'
 import SearchBar from './SearchBar'
 import moduleCss from './testScss.module.scss'
 
-const listData = [
+const initlistData = [
   {
     key: '1',
     name: 'John Brown',
@@ -25,12 +25,26 @@ const listData = [
 ]
 
 function TableDemo() {
+  const [listData, setListData] = useState([])
+
   const [modalTitle, setModalTitle] = useState('新增')
+
   const [addOrEditVisible, setAddOrEditVisible] = useState(false)
-  const [initFormValues, setInitFormValues] = useState(null)
+
+  const [initFormValues, setInitFormValues] = useState({ name: '' })
+
   const [currentFormId, setCurrentFormId] = useState(null)
+
+  const [pagination] = useState({
+    total: 500
+  })
   // let formRef = useRef(null)
   let formRef
+
+  useEffect(() => {
+    setTable()
+    // 这里进行table初始化(setTable)
+  }, [])
 
   const actionRender = (text, record, index) => {
     return (
@@ -94,8 +108,12 @@ function TableDemo() {
   const handleConfirmAddOrEdit = () => {
     const formToValidate = formRef.props.form
     formToValidate.validateFields((errors, values) => {
+      console.log('errors, values: ', errors, values)
       if (errors) {
         return
+      } else {
+        setListData([])
+        setAddOrEditVisible(false)
       }
       // const formData = formTovalidate.getFieldsValue()
       // this.setState({
@@ -123,7 +141,7 @@ function TableDemo() {
     setAddOrEditVisible(true)
   }
 
-  const handleEdit = (record) => {
+  const handleEdit = record => {
     setCurrentFormId(record.key)
     setAddOrEditVisible(true)
     setInitFormValues({
@@ -174,8 +192,27 @@ function TableDemo() {
 
   const renderDetailModel = () => {}
 
+  const handleSizeChange = () => {}
+
   const renderTable = () => {
-    return <Table bordered columns={columns} dataSource={listData} />
+    return (
+      <Table
+        bordered
+        columns={columns}
+        dataSource={listData}
+        pagination={{
+          ...pagination,
+          showSizeChanger: true,
+          size: 'small',
+          pageSizeOptions: ['10', '30', '50'],
+          onShowSizeChange: handleSizeChange
+        }}
+      />
+    )
+  }
+
+  const setTable = async (queryParams = {}) => {
+    setListData(initlistData)
   }
 
   return (

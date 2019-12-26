@@ -68,7 +68,7 @@ export const RouteConfig = [
     path: '/treeSelect',
     component: lazy(() => import('../views/test/treeSelect')),
     role: '树选择',
-    icon: 'form'
+    icon: 'cluster'
   },
   {
     name: '二级菜单',
