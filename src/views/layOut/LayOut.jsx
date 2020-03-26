@@ -18,7 +18,6 @@ class MyLayOut extends React.Component {
     this.state = {
       collapsed: false
     }
-    this.keyForCollapesd = 0
   }
 
   componentDidMount() {
@@ -88,7 +87,7 @@ class MyLayOut extends React.Component {
           collapsible
           collapsed={this.state.collapsed}
         >
-          <SideMenu keyForCollapesd={this.keyForCollapesd}></SideMenu>
+          <SideMenu></SideMenu>
         </Sider>
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }}>
