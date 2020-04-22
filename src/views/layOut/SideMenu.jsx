@@ -10,18 +10,17 @@ const { SubMenu } = Menu
 
 // 适用上述格式多层级菜单,这里由于迭代，算重了，所以返回结果去重
 function finddefaultOpenKeys(menuList, pathname) {
-  const saveMenuList = _.cloneDeep(menuList)
   let arr = []
-  const itera = (menuList, pathname) => {
-    for (let i in menuList) {
-      if (menuList[i].hasOwnProperty('children')) {
-        for (let k in menuList[i].children) {
-          if (menuList[i].children[k].path === pathname) {
-            arr.unshift(menuList[i].path)
+  const itera = (list, targetPath) => {
+    for (let i in list) {
+      if (list[i].hasOwnProperty('children')) {
+        for (let k in list[i].children) {
+          if (list[i].children[k].path === targetPath) {
+            arr.unshift(list[i].path)
             // 关键迭代
-            itera(saveMenuList, menuList[i].path)
+            itera(menuList, list[i].path)
           } else {
-            itera(menuList[i].children, pathname)
+            itera(list[i].children, targetPath)
           }
         }
       }
@@ -31,22 +30,7 @@ function finddefaultOpenKeys(menuList, pathname) {
   return _.uniq(arr)
 }
 
-function produceNewMenuList(RouteConfig) {
-  let arr = []
-  for (let i in RouteConfig) {
-    if (RouteConfig[i].hasOwnProperty('children')) {
-      arr[i] = {
-        ..._.omit(RouteConfig[i], ['component']),
-        children: produceNewMenuList(RouteConfig[i].children)
-      }
-    } else {
-      arr[i] = _.omit(RouteConfig[i], ['component'])
-    }
-  }
-  return arr
-}
-
-const menuList = produceNewMenuList(RouteConfig)
+const menuList = RouteConfig
 
 class SideMenu extends React.Component {
   constructor(props) {
