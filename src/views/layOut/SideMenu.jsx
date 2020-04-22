@@ -38,31 +38,20 @@ class SideMenu extends React.Component {
     const { pathname } = this.props.history.location
     const ownDefaultOpenKeys = finddefaultOpenKeys(menuList, pathname)
 
-    this.menuList = menuList
     this.state = {
-      menuList: menuList,
-      ownDefaultOpenKeys: ownDefaultOpenKeys,
-      ownDefaultSelectedKeys: [pathname],
-      cacheOpenKeys: ownDefaultOpenKeys,
-      prePropsCollapsed: this.props.keyForCollapesd
+      openKeys: ownDefaultOpenKeys,
+      selectedKeys: [pathname]
     }
   }
 
   static getDerivedStateFromProps(props, state) {
     const { pathname } = props.history.location
-    const { cacheOpenKeys } = state
-    if (pathname !== state.ownDefaultSelectedKeys[0]) {
+    const { openKeys } = state
+    if (pathname !== state.selectedKeys[0]) {
       return {
-        ownDefaultSelectedKeys: [pathname],
-        ownDefaultOpenKeys: _.uniq(
-          finddefaultOpenKeys(menuList, pathname).concat(cacheOpenKeys)
-        )
-      }
-    }
-    if (props.keyForCollapesd !== state.prePropsCollapsed) {
-      return {
-        cacheOpenKeys: [],
-        prePropsCollapsed: props.keyForCollapesd
+        selectedKeys: [pathname],
+        // 这里加了一个concat(openKeys)之后，便不会闪烁
+        openKeys: _.uniq(finddefaultOpenKeys(menuList, pathname).concat(openKeys))
       }
     }
     return null
@@ -90,10 +79,7 @@ class SideMenu extends React.Component {
           )
         } else {
           target[i] = (
-            <Menu.Item
-              key={menuList[i].path}
-              onClick={v => this.handleChangeMenu(v, menuList[i])}
-            >
+            <Menu.Item key={menuList[i].path}>
               <Link to={menuList[i].path}>
                 {menuList[i].icon ? <Icon type={menuList[i].icon} /> : null}
                 <span>{menuList[i].name}</span>
@@ -106,34 +92,37 @@ class SideMenu extends React.Component {
     return target
   }
 
-  handleChangeMenu = (params, menu) => {
-    this.props.history.push(menu.path)
+  handleMenuItemClick = ({ key }) => {
+    this.props.history.push(key)
+    this.setState({
+      selectedKeys: key
+    })
   }
 
   handleSubMenuClick = ({ key }) => {
-    let newdefaultOpenKeys = []
-    const { cacheOpenKeys } = this.state
-    const isHave = cacheOpenKeys.includes(key)
+    const { openKeys } = this.state
+    let newOpenKeys
+    const isHave = openKeys.find(v => v === key)
     if (isHave) {
-      newdefaultOpenKeys = cacheOpenKeys.filter(v => v !== key)
+      newOpenKeys = openKeys.filter(v => v !== key)
     } else {
-      newdefaultOpenKeys = [...cacheOpenKeys, key]
+      newOpenKeys = openKeys.concat(key)
     }
     this.setState({
-      cacheOpenKeys: newdefaultOpenKeys
+      openKeys: newOpenKeys
     })
   }
 
   renderMenu() {
-    return this.iterateMenu(this.state.menuList)
+    return this.iterateMenu(menuList)
   }
 
   render() {
-    const { menuList, ownDefaultOpenKeys, ownDefaultSelectedKeys } = this.state
+    const { selectedKeys, openKeys } = this.state
     const { collapsed } = this.props
     return (
       <React.Fragment>
-        <div className="logo" />
+        <div className='logo' />
         <div
           style={{
             width: '217px',
@@ -143,12 +132,12 @@ class SideMenu extends React.Component {
           }}
         >
           <Menu
-            key={ownDefaultSelectedKeys}
-            defaultSelectedKeys={ownDefaultSelectedKeys}
-            defaultOpenKeys={ownDefaultOpenKeys}
-            mode="inline"
-            theme="dark"
+            selectedKeys={selectedKeys}
+            openKeys={openKeys}
+            mode='inline'
+            theme='dark'
             collapsed={collapsed}
+            onClick={this.handleMenuItemClick}
           >
             {this.iterateMenu(menuList)}
           </Menu>
